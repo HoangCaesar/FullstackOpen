@@ -45,7 +45,7 @@ const exerciseCalculator = (hoursOfExercise: Array<number>, target: number) => {
   let average = hoursOfExercise.reduce((acc, hour) => {
     return acc + hour;
   });
-  average = average / 7;
+  average = average / hoursOfExercise.length;
 
   let trainingDays = 0;
   hoursOfExercise.map((hour, index) => {
