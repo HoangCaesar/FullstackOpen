@@ -1,0 +1,15 @@
+title New note
+
+note over browser:
+browser starts executing js-code
+that add new note (content+date) to  
+note list, rerenders the note list on the page
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server->browser: json
+
+note over browser:
+browser stays on the same page
+end note
+
