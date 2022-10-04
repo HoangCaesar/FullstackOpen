@@ -1,17 +1,21 @@
 import React from 'react'
 
-const Content = (props) => {
+const Content = ({ parts }) => {
     return (
         <>
-            <Part part={props.part} exercise={props.exercise} />
+        {
+            parts.map(part => {
+                return <Part key={part.name} name={part.name} exercises={part.exercises} />
+            })
+        }
         </>
     )
 }
 
-const Part = ({ part, exercise }) => {
+const Part = ({ name, exercises }) => {
     return (
         <p>
-            {part} {exercise}
+            {name} {exercises}
         </p>
     )
 }
