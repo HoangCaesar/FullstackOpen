@@ -1,13 +1,22 @@
 import { useState, useCallback, useEffect } from 'react'
 import { Form, Search, Statistics } from './components'
-
+import axios from 'axios';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filter, setFilter] = useState([]);
-  console.log(filter);
-  console.log(persons);
   const newList = persons.filter(person => filter.includes(person.name.toLowerCase()))
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(
+        res => {
+          setPersons(prev => [...prev, ...res.data])
+        }
+      )
+  }, [])
+  
 
   const handleAdd = useCallback((name, number) => {
     setPersons(prev => [
