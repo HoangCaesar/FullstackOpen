@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Detail from './Detail';
 
 const Search = () => {
     const [countriesList, setCountriesList] = useState([]);
     const [filterList, setFilterList] = useState([]);
     const [search, setSearch] = useState('');
+
+    const [show, setShow] = useState(new Array(filterList.length));
+    const [close, setClose] = useState(new Array(filterList.length));
 
     useEffect(() => {
         axios
@@ -22,13 +26,55 @@ const Search = () => {
                 ||
                 country.name.official.toLowerCase().includes(search.toLowerCase())
         )
-        console.log(filterList);
         setFilterList(filterList)
     }, [search])
 
     const handleSearch = (e) => {
         setSearch(e.target.value);
     }
+
+    const handleShow = (index) => {
+        console.log(index);
+        setShow(prev => {
+            const arr = []
+            for (let i = 0; i < filterList.length; i++) {
+                if (i == index) arr[i] = filterList[i]
+                else arr[i] = prev[i];
+            }
+            return arr;
+        }
+        );
+        setClose(prev => {
+            const arr = []
+            for (let i = 0; i < filterList.length; i++) {
+                if (i == index) arr[i] = true
+                else arr[i] = prev[i];
+            }
+            return arr;
+        });
+    }
+
+    const handleClose = (index) => {
+        setShow(prev => {
+            const arr = []
+            for (let i = 0; i < filterList.length; i++) {
+                if (i == index) arr[i] = undefined
+                else arr[i] = prev[i];
+            }
+            return arr;
+        }
+        );
+        setClose(prev => {
+            const arr = []
+            for (let i = 0; i < filterList.length; i++) {
+                if (i == index) arr[i] = false
+                else arr[i] = prev[i];
+            }
+            return arr;
+        });
+    }
+
+    console.log(show);
 
     return (
         <>
@@ -40,22 +86,27 @@ const Search = () => {
             {filterList.length > 10 && search && <p>Too many matches</p>}
 
             {filterList.length <= 10 && filterList.length > 1 && filterList.map(
-                country => <p key={country.idd.suffixes}>{country.name.common}</p>
+                (country, index) =>
+                    <div key={country.idd.suffixes}>
+                        {country.name.common}
+                        {
+                            close[index] ?
+                                <button onClick={() => handleClose(index)} style={{ cursor: 'pointer', marginLeft: '10px' }} >
+                                    close
+                                </button>
+                                :
+                                <button onClick={() => handleShow(index)} style={{ cursor: 'pointer', marginLeft: '10px' }} >
+                                    show
+                                </button>
+                        }
+                        {
+                            show[index] && <Detail filterItem={show[index]} />
+                        }
+                    </div>
             )}
 
             {
-                filterList.length == 1 && <div>
-                    <h1>{filterList[0].name.common}</h1>
-                    <h2><span>Capital: </span>{filterList[0].capital[0]}</h2>
-                    <h3><span>Area: </span>{filterList[0].area}</h3>
-                    <h4>Languages: </h4>
-                    {
-                        Object.values(filterList[0].languages).map(
-                            (lan, i) => <li key={`${lan}${i}`}>{lan}</li>
-                        )
-                    }
-                    <img src={filterList[0].flags['png']} alt="Flags" style={{ marginTop: '30px' }} />
-                </div>
+                filterList.length == 1 && <Detail filterItem={filterList[0]} />
             }
         </>
     )
