@@ -8,7 +8,7 @@ const Detail = ({ filterItem }) => {
             <h4>Languages: </h4>
             {
                 Object.values(filterItem.languages).map(
-                    (lan, i) => <li key={`${lan}${i}`}>{lan}</li>
+                    (lan, i) => <li key={`${lan}`}>{lan}</li>
                 )
             }
             <img src={filterItem.flags['png']} alt="Flags" style={{ marginTop: '30px' }} />

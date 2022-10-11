@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Detail from './Detail';
+import Weather from './Weather';
 
 const Search = () => {
     const [countriesList, setCountriesList] = useState([]);
@@ -34,7 +35,6 @@ const Search = () => {
     }
 
     const handleShow = (index) => {
-        console.log(index);
         setShow(prev => {
             const arr = []
             for (let i = 0; i < filterList.length; i++) {
@@ -73,9 +73,6 @@ const Search = () => {
             return arr;
         });
     }
-
-    console.log(show);
-
     return (
         <>
             <div style={{ display: 'flex' }}>
@@ -87,7 +84,7 @@ const Search = () => {
 
             {filterList.length <= 10 && filterList.length > 1 && filterList.map(
                 (country, index) =>
-                    <div key={country.idd.suffixes}>
+                    <div key={`${country.idd.suffixes}${Math.random()*100}`}>
                         {country.name.common}
                         {
                             close[index] ?
@@ -100,13 +97,21 @@ const Search = () => {
                                 </button>
                         }
                         {
-                            show[index] && <Detail filterItem={show[index]} />
+                            show[index] &&
+                            <div>
+                                <Detail filterItem={show[index]} />
+                                <Weather filterItem={show[index]} />
+                            </div>
                         }
                     </div>
             )}
 
             {
-                filterList.length == 1 && <Detail filterItem={filterList[0]} />
+                filterList.length == 1 &&
+                <div>
+                    <Detail filterItem={filterList[0]} />
+                    <Weather filterItem={filterList[0]} />
+                </div>
             }
         </>
     )
