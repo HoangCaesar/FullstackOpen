@@ -1,9 +1,13 @@
 import React from 'react'
+import { memo } from 'react'
 
-const Details = ({ name, number }) => {
+const Details = ({ name, number, id, handleDelete }) => {
   return (
-    <p>{name} {number}</p>
+    <p>
+      {name} {number}
+      <button onClick={() => handleDelete(id)} style={{ marginLeft: '10px', cursor: 'pointer'}}>delete</button>
+    </p>
   )
 }
 
-export default Details
+export default memo(Details)
