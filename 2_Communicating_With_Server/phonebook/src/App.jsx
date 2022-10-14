@@ -1,10 +1,11 @@
 import { useState, useCallback, useEffect } from 'react'
-import { Form, Search, Statistics } from './components'
+import { Form, Search, Statistics, Notification } from './components'
 import personsApi from './api/personsApi';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filter, setFilter] = useState([]);
+  const [message, setMessage] = useState('')
   const newList = persons.length > 0 && persons.filter(person => filter.includes(person.name.toLowerCase()))
 
   useEffect(() => {
@@ -33,9 +34,10 @@ const App = () => {
         console.log(err);
       }
     })();
+    setMessage({ type: 'add', msg: `Added ${name}` })
   }, []);
 
-  const handleDelete = useCallback((id) => {
+  const handleDelete = useCallback((id, name) => {
     const confirm = window.confirm("Are you sure want to delete this note?");
     if (confirm) {
       (async () => {
@@ -49,6 +51,7 @@ const App = () => {
           console.log(err);
         }
       })();
+      setMessage({ type: 'remove', msg: `${name}  has been removed out of list` });
     }
   }, []);
 
@@ -64,17 +67,22 @@ const App = () => {
         console.log(err);
       }
     })();
+    setMessage({ type: 'update', msg: `${note.name} has been updated with new number` });
   }, []);
 
   const handleFilter = useCallback((list) => {
     setFilter(list)
   }, []);
 
+  const handleMessage = useCallback(() => {
+    setMessage('')
+  }, []);
   return (
     <div>
       <h2>Phonebook</h2>
       <Search statistics={persons} handleFilter={handleFilter} />
       <h2>Add a new</h2>
+      {message && <Notification message={message} handleMessage={handleMessage} />}
       <Form statistics={persons} handleAdd={handleAdd} handleUpdate={handleUpdate} />
       <h2>Numbers</h2>
       {

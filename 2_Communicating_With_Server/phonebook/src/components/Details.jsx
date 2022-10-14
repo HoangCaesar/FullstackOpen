@@ -5,7 +5,7 @@ const Details = ({ name, number, id, handleDelete }) => {
   return (
     <p>
       {name} {number}
-      <button onClick={() => handleDelete(id)} style={{ marginLeft: '10px', cursor: 'pointer'}}>delete</button>
+      <button onClick={() => handleDelete(id, name)} style={{ marginLeft: '10px', cursor: 'pointer'}}>delete</button>
     </p>
   )
 }
