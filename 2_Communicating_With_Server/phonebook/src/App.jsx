@@ -43,15 +43,16 @@ const App = () => {
       (async () => {
         try {
           await personsApi.deleteNote(id)
+          setMessage({ type: 'remove', msg: `${name}  has been removed out of list` });
           await personsApi
             .getAll()
             .then(res => setPersons(res))
         }
         catch (err) {
+          setMessage({ type: 'remove', msg: `${name} has been removed from server` });
           console.log(err);
         }
       })();
-      setMessage({ type: 'remove', msg: `${name}  has been removed out of list` });
     }
   }, []);
 
@@ -59,15 +60,19 @@ const App = () => {
     (async () => {
       try {
         await personsApi.updateNote(note)
+        setMessage({ type: 'update', msg: `${note.name} has been updated with new number` });
         await personsApi
           .getAll()
           .then(res => setPersons(res))
       }
       catch (err) {
+        setMessage({ type: 'remove', msg: `${note.name} has been removed from server` });
+        await personsApi
+          .getAll()
+          .then(res => setPersons(res))
         console.log(err);
       }
     })();
-    setMessage({ type: 'update', msg: `${note.name} has been updated with new number` });
   }, []);
 
   const handleFilter = useCallback((list) => {
@@ -77,6 +82,7 @@ const App = () => {
   const handleMessage = useCallback(() => {
     setMessage('')
   }, []);
+
   return (
     <div>
       <h2>Phonebook</h2>
