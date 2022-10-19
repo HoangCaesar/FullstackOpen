@@ -1,5 +1,5 @@
 const express = require('express');
-const morgan = require('morgan');
+const morgan = require('morgan'); const cors = require('cors')
 
 const app = express();
 morgan.token('info', function (req, res) { return JSON.stringify(req.body) })
@@ -14,6 +14,7 @@ app.use(morgan(function (tokens, req, res) {
     ].join(' ')
 }))
 app.use(express.json())
+app.use(cors());
 
 let data = [
     {
@@ -37,6 +38,10 @@ let data = [
         "number": "39-23-6423122"
     }
 ]
+
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/dist/index.html');
+});
 
 app.get('/api/persons', (req, res) => {
     res.send(data)
@@ -65,6 +70,13 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end();
 })
 
+app.put('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id);
+    data = data.filter(item => item.id !== id);
+    data = data.concat(req.body);
+    res.status(204).end();
+})
+
 app.post('/api/persons', (req, res) => {
     const body = req.body;
     const nameCheck = data.find(data => data.name === body.name)
@@ -89,7 +101,7 @@ app.post('/api/persons', (req, res) => {
         "number": body.number
     }
     data = data.concat(person)
-    res.status(204).end();
+    res.send(person)
 })
 
 const generateId = () => {
@@ -98,7 +110,14 @@ const generateId = () => {
     return id;
 }
 
-const PORT = 3001;
-app.listen(PORT, (req, res) => {
-    console.log(`Server is running on port ${PORT}`);
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('webapp/dist')),
+        app.get("*", (req, res) => {
+            res.sendFile(path.resolve(__dirname, "webapp", "dist", "index.html"));
+        })
+}
+
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
 })

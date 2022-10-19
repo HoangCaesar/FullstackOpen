@@ -1,0 +1,28 @@
+{
+  "name": "phonebook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "proxy": "https://cryptic-savannah-34046.herokuapp.com/",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:ui": "rm -rf build && cd ../part2-notes/ && npm run build && cp -r build ../notes-backend",
+    "deploy": "git push heroku main",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",    
+    "logs:prod": "heroku logs --tail"
+  },
+  "dependencies": {
+    "axios": "^1.1.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.1.0",
+    "json-server": "^0.17.0",
+    "vite": "^3.1.0"
+  }
+}
