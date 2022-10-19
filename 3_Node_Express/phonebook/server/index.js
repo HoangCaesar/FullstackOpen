@@ -15,6 +15,7 @@ app.use(morgan(function (tokens, req, res) {
 }))
 app.use(express.json())
 app.use(cors());
+app.use(express.static('dist'))
 
 let data = [
     {
@@ -52,7 +53,7 @@ app.get('/api/persons/:id', (req, res) => {
     const person = data.find(data => data.id === id);
 
     if (person) {
-        res.send(`<div><p>Name: ${person.name}</p><p>Number: ${person.number}</p><p>ID: ${person.naidme}</p></div>`)
+        res.send(`<div><p>Name: ${person.name}</p><p>Number: ${person.number}</p><p>ID: ${person.id}</p></div>`)
     } else {
         res.status(404).end()
     }
@@ -114,3 +115,5 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
+
+// https://secret-shore-30720.herokuapp.com/
