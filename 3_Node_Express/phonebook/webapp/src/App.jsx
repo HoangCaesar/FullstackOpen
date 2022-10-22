@@ -23,7 +23,7 @@ const App = () => {
   }, [])
 
   const handleAdd = useCallback((name, number) => {
-    const note = { name, number };
+    const note = { name, phone: number };
     (async () => {
       try {
         await personsApi

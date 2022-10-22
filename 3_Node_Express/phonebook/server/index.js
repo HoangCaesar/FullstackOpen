@@ -1,5 +1,8 @@
 const express = require('express');
-const morgan = require('morgan'); const cors = require('cors')
+const morgan = require('morgan');
+const cors = require('cors')
+require('dotenv').config()
+const People = require('./src/models/people');
 
 const app = express();
 morgan.token('info', function (req, res) { return JSON.stringify(req.body) })
@@ -15,103 +18,90 @@ app.use(morgan(function (tokens, req, res) {
 }))
 app.use(express.json())
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static('dist'))
-
-let data = [
-    {
-        "id": 1,
-        "name": "Arto Hellas",
-        "number": "040-123456"
-    },
-    {
-        "id": 2,
-        "name": "Ada Lovelace",
-        "number": "39-44-5323523"
-    },
-    {
-        "id": 3,
-        "name": "Dan Abramov",
-        "number": "12-43-234345"
-    },
-    {
-        "id": 4,
-        "name": "Mary Poppendieck",
-        "number": "39-23-6423122"
-    }
-]
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/dist/index.html');
 });
 
-app.get('/api/persons', (req, res) => {
-    res.send(data)
+app.get('/api/persons/:id', async (req, res) => {
+    const id = req.params.id;
+    await People.findById(id).then(person => {
+        res.json(person)
+    })
 })
 
-app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    const person = data.find(data => data.id === id);
-
-    if (person) {
-        res.send(`<div><p>Name: ${person.name}</p><p>Number: ${person.number}</p><p>ID: ${person.id}</p></div>`)
-    } else {
-        res.status(404).end()
-    }
+app.get('/api/persons', async (req, res) => {
+    await People.find({}).then(people => {
+        res.json(people)
+    })
 })
 
-app.get('/info', (req, res) => {
-    const entries = data.length;
+app.get('/info', async (req, res) => {
+    // (async () => {
     const date = new Date()
-    res.send(`<div><p>Phonebook has info for ${entries} people</p><p>${date}</p></div>`)
+    await People.find({}).then(people => {
+        res.send(`<div><p>Phonebook has info for ${people.length} people</p><p>${date}</p></div>`)
+    });
+    // })()
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    data = data.filter(data => data.id !== id);
-    res.status(204).end();
+app.delete('/api/persons/:id', async (req, res) => {
+    const id = req.params.id;
+    await People.findByIdAndDelete(id)
+    res.status(200).json('This person has been deleted')
 })
 
-app.put('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id);
-    data = data.filter(item => item.id !== id);
-    data = data.concat(req.body);
-    res.status(204).end();
+app.put('/api/persons/:id', async (req, res) => {
+    const id = req.params.id;
+    const person = await People.findById(id)
+    if (!person) res.status(403).json("Invalid id, we can't find this person")
+
+    if (person.name === req.body.name && person.phone === req.body.phone) {
+        res.status(304).
+            return;
+    }
+    await People.findByIdAndUpdate(
+        id,
+        {
+            $set: req.body
+        }
+    )
+    res.status(200).json("Updated successully!");
 })
 
-app.post('/api/persons', (req, res) => {
-    const body = req.body;
-    const nameCheck = data.find(data => data.name === body.name)
+app.post('/api/persons', async (req, res) => {
+    const { name, phone } = req.body;
+    let nameCheck = await People.findOne({ name })
 
-    if (!body.name) {
+    if (!name) {
         return res.status(404).json({
             error: "Name is missing"
         })
-    } else if (!body.number) {
+    } else if (!phone) {
         return res.status(404).json({
-            error: "Number is missing"
+            error: "Phone is missing"
         })
-    } else if (nameCheck) {
+    }
+    else if (nameCheck) {
         return res.status(404).json({
             error: "This name has been taken already"
         })
     }
 
-    const person = {
-        "id": generateId(),
-        "name": body.name,
-        "number": body.number
-    }
-    data = data.concat(person)
-    res.send(person)
+    const person = new People({
+        "name": name,
+        "phone": phone,
+        "date": new Date()
+    })
+    person.save().then(savedPerson => {
+        res.json(savedPerson)
+    })
 })
 
-const generateId = () => {
-    const max = Math.max(...data.map(data => data.id))
-    const id = Math.floor(Math.random() * max) + max + 1;
-    return id;
-}
-
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
