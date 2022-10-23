@@ -32,6 +32,7 @@ const App = () => {
       }
       catch (err) {
         console.log(err);
+        setMessage({ type: 'remove', msg: `${err.response.data.error}` });
       }
     })();
     setMessage({ type: 'add', msg: `Added ${name}` })
@@ -49,7 +50,7 @@ const App = () => {
             .then(res => setPersons(res))
         }
         catch (err) {
-          setMessage({ type: 'remove', msg: `${name} has been removed from server` });
+          setMessage({ type: 'remove', msg: `Wrong ID` });
           console.log(err);
         }
       })();
@@ -66,7 +67,7 @@ const App = () => {
           .then(res => setPersons(res))
       }
       catch (err) {
-        setMessage({ type: 'remove', msg: `${note.name} has been removed from server` });
+        setMessage({ type: 'remove', msg: `${err.response.data.error}` });
         await personsApi
           .getAll()
           .then(res => setPersons(res))

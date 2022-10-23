@@ -2,7 +2,6 @@ import Details from './Details';
 import { memo } from 'react'
 
 const Statistics = ({ statistics, handleDelete }) => {
-  console.log(statistics);
   return (
     <>
       {
