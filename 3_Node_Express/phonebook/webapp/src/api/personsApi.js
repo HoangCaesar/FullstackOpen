@@ -1,6 +1,6 @@
 import axios from 'axios'
 import queryString from 'query-string';
-const BASE_URL = 'http://localhost:3001/api/persons';
+const BASE_URL = '/api/persons';
 
 const axiosClient = axios.create({
     baseUrl: BASE_URL,

@@ -22,8 +22,8 @@ const App = () => {
     getData();
   }, [])
 
-  const handleAdd = useCallback((name, number) => {
-    const note = { name, phone: number };
+  const handleAdd = useCallback((name, phone) => {
+    const note = { name, phone };
     (async () => {
       try {
         await personsApi
@@ -60,7 +60,7 @@ const App = () => {
     (async () => {
       try {
         await personsApi.updateNote(note)
-        setMessage({ type: 'update', msg: `${note.name} has been updated with new number` });
+        setMessage({ type: 'update', msg: `${note.name} has been updated with new phone` });
         await personsApi
           .getAll()
           .then(res => setPersons(res))
@@ -90,7 +90,7 @@ const App = () => {
       <h2>Add a new</h2>
       {message && <Notification message={message} handleMessage={handleMessage} />}
       <Form statistics={persons} handleAdd={handleAdd} handleUpdate={handleUpdate} />
-      <h2>Numbers</h2>
+      <h2>phones</h2>
       {
         filter.length > 0 ?
           <Statistics statistics={newList} handleDelete={handleDelete} />

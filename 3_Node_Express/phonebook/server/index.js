@@ -26,50 +26,57 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/dist/index.html');
 });
 
-app.get('/api/persons/:id', async (req, res) => {
+app.get('/api/persons/:id', async (req, res, next) => {
     const id = req.params.id;
-    await People.findById(id).then(person => {
-        res.json(person)
-    })
+    await People.findById(id)
+        .then(person => {
+            if (person) {
+                res.json(person)
+            } else {
+                res.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
 
-app.get('/api/persons', async (req, res) => {
+app.get('/api/persons', async (req, res, next) => {
     await People.find({}).then(people => {
         res.json(people)
     })
 })
 
-app.get('/info', async (req, res) => {
-    // (async () => {
+app.get('/info', async (req, res, next) => {
     const date = new Date()
     await People.find({}).then(people => {
         res.send(`<div><p>Phonebook has info for ${people.length} people</p><p>${date}</p></div>`)
     });
-    // })()
 })
 
-app.delete('/api/persons/:id', async (req, res) => {
+app.delete('/api/persons/:id', async (req, res, next) => {
     const id = req.params.id;
     await People.findByIdAndDelete(id)
-    res.status(200).json('This person has been deleted')
+        .then(result => {
+            res.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', async (req, res) => {
+app.put('/api/persons/:id', async (req, res, next) => {
     const id = req.params.id;
-    const person = await People.findById(id)
-    if (!person) res.status(403).json("Invalid id, we can't find this person")
-
-    if (person.name === req.body.name && person.phone === req.body.phone) {
-        res.status(304).
-            return;
+    const person = await People.findById(id).catch(error => next(error));
+    if (!person) {
+        res.status(403).json("Wrong id, we can't find this person");
+        return;
     }
-    await People.findByIdAndUpdate(
-        id,
-        {
-            $set: req.body
-        }
-    )
-    res.status(200).json("Updated successully!");
+    if (person.name === req.body.name && person.phone === req.body.phone) {
+        res.status(304).json("Nothing changed!")
+        return;
+    }
+    await People.findByIdAndUpdate(id, { $set: req.body }, { new: true })
+        .then(updatedNote => {
+            res.status(200).json("Updated successully!");
+        })
+        .catch(error => next(error));
 })
 
 app.post('/api/persons', async (req, res) => {
@@ -100,6 +107,26 @@ app.post('/api/persons', async (req, res) => {
         res.json(savedPerson)
     })
 })
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'Malformatted id' })
+    } else if (error.name === 'SyntaxError') {
+        return response.status(400).send({ error: 'Wrong id' })
+    }
+
+    next(error)
+}
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {

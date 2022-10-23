@@ -2,6 +2,7 @@ import Details from './Details';
 import { memo } from 'react'
 
 const Statistics = ({ statistics, handleDelete }) => {
+  console.log(statistics);
   return (
     <>
       {
@@ -9,7 +10,7 @@ const Statistics = ({ statistics, handleDelete }) => {
           <Details
             key={statistic.name}
             name={statistic.name}
-            number={statistic.number}
+            phone={statistic.phone}
             id={statistic.id}
             handleDelete={handleDelete}
           />))
