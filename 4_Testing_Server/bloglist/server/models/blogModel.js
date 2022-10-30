@@ -16,7 +16,9 @@ const blogSchema = new Schema({
 		type: String,
 		required: true
 	},
-	likes: Number,
+	likes: {
+		type: Number || 0
+	},
 	date: {
 		type: Date,
 		required: true
