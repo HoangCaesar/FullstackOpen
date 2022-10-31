@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const bcrypt = require('bcrypt');
+const { User, Blog } = require('../models');
 const helper = require('./test_helper');
-const Blog = require('../models/blogModel');
 const app = require('../app');
 
 const api = supertest(app);
@@ -60,6 +61,29 @@ describe('Get blog info', () => {
 });
 
 describe('Addition of a new blog', () => {
+  let headers;
+
+  beforeEach(async () => {
+    await User.deleteMany({});
+
+    const newUser = {
+      username: 'rootUser',
+      name: 'rootUser',
+      password: 'password',
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser);
+
+    const result = await api
+      .post('/api/login')
+      .send(newUser);
+
+    headers = {
+      'Authorization': `bearer ${result.body.token}`
+    };
+  });
   test('a valid blog can be added', async () => {
     const newblog = {
       'title': 'How to fluently speaking English?',
@@ -71,6 +95,7 @@ describe('Addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set(headers)
       .send(newblog)
       .expect(201)
       .expect('Content-Type', /application\/json/);
@@ -94,6 +119,7 @@ describe('Addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set(headers)
       .send(newblog)
       .expect(400);
 
@@ -112,6 +138,7 @@ describe('Addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set(headers)
       .send(newblog)
       .expect(201)
       .expect('Content-Type', /application\/json/);
@@ -132,8 +159,25 @@ describe('Addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set(headers)
       .send(newblog)
       .expect(400);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('if addition of a new a bog without token, responds 401 Unauthorized', async () => {
+    const newblog = {
+      'author': 'Hoang',
+      'likes': 1000,
+      'date': new Date()
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newblog)
+      .expect(401);
 
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
@@ -144,7 +188,7 @@ describe('Update of a blog', () => {
   test('likes property a blog can be updated', async () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogToUpdate = blogsAtStart[0];
-    blogToUpdate.likes = null; 
+    blogToUpdate.likes = null;
     await api
       .put(`/api/blogs/${blogToUpdate.id}`)
       .send(blogToUpdate)
@@ -176,6 +220,60 @@ describe('Delettion of a blog', () => {
     const titles = blogsAtEnd.map(r => r.title);
 
     expect(titles).not.toContain(blogToDelete.title);
+  });
+});
+
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({});
+
+    const passwordHash = await bcrypt.hash('sekret', 10);
+    const user = new User({ username: 'rootUser', name: 'rootUser', passwordHash });
+
+    await user.save();
+  });
+
+  test('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+      password: 'salainen',
+    };
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+
+    const usernames = usersAtEnd.map(u => u.username);
+    expect(usernames).toContain(newUser.username);
+  });
+
+  test('creation fails with proper statuscode and message if username already taken', async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: 'rootUser',
+      name: 'Superuser',
+      password: 'salainen',
+    };
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    expect(result.body.error).toContain('This username has been used already');
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toEqual(usersAtStart);
   });
 });
 
