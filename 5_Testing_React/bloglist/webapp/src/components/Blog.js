@@ -1,4 +1,5 @@
 import Togglable from './Togglable';
+import PropTypes from 'prop-types';
 
 const Blog = ({ blog, onLike, onDelete }) => {
     const handleLike = () => {
@@ -41,11 +42,18 @@ const Blog = ({ blog, onLike, onDelete }) => {
                         like
                     </button>
                 </h4>
-                <button onClick={handleDelete} style={{marginRight: '10px', padding: '4px 8px', cursor: 'pointer' }}>
+                <button onClick={handleDelete} style={{ marginRight: '10px', padding: '4px 8px', cursor: 'pointer' }}>
                     Delete
                 </button>
             </Togglable>
         </div>
     );
 };
+
+Blog.propTypes = {
+    blog: PropTypes.object.isRequired,
+    onLike: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+};
+
 export default Blog;

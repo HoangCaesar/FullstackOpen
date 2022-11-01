@@ -1,7 +1,8 @@
 import { useState, memo } from 'react';
 import Notification from './Notification';
+import PropTypes from 'prop-types';
 
-const AddBlog = ({ errorMessage, onAdd }) => {
+const AddBlogForm = ({ errorMessage, onAdd }) => {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [url, setUrl] = useState('');
@@ -55,4 +56,9 @@ const AddBlog = ({ errorMessage, onAdd }) => {
     );
 };
 
-export default memo(AddBlog);
+AddBlogForm.propTypes = {
+    errorMessage: PropTypes.string,
+    onAdd: PropTypes.func.isRequired
+};
+
+export default memo(AddBlogForm);

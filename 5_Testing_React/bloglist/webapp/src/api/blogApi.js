@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient'
+import axiosClient from './axiosClient';
 import { BASE_URL } from './configApi';
 
 const blogApi = {
@@ -7,6 +7,6 @@ const blogApi = {
     create: (params) => axiosClient.post(`${BASE_URL}/blogs`, params),
     update: (id, params) => axiosClient.put(`${BASE_URL}/blogs/${id}`, params),
     delete: (id) => axiosClient.delete(`${BASE_URL}/blogs/${id}`),
-}
+};
 
 export default blogApi;

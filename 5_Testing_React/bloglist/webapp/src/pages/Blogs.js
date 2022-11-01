@@ -127,7 +127,7 @@ const Blogs = () => {
 
             {infoMessage && <Notification message={infoMessage} type={typeMessage} />}
             {blogs
-                ?.sort((a, b) => {
+                .sort((a, b) => {
                     return b.likes - a.likes;
                 })
                 .map((blog) => (

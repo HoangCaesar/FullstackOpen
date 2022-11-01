@@ -1,4 +1,5 @@
 import { useState, memo } from 'react';
+import PropTypes from 'prop-types';
 
 const LoginForm = ({ onLogin, onCancel }) => {
     const [username, setUsername] = useState('');
@@ -47,6 +48,11 @@ const LoginForm = ({ onLogin, onCancel }) => {
             </button>
         </form>
     );
+};
+
+LoginForm.propTypes = {
+    onLogin: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
 };
 
 export default memo(LoginForm);

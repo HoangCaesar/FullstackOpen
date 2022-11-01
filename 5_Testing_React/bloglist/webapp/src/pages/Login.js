@@ -9,7 +9,7 @@ const Login = () => {
 
     const [errorMessage, setErrorMessage] = useState(null);
 
-    
+
     // useEffect(() => {
     //     (async () => {
     //         const res = await isAuthenticate();
@@ -43,7 +43,7 @@ const Login = () => {
         e.preventDefault();
         navigate('/');
     }, []);
-    
+
     return (
         <>
             <h1>Login</h1>
