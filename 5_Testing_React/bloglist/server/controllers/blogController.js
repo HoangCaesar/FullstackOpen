@@ -41,7 +41,7 @@ exports.create = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-	const { title, author, likes } = req.body;
+	const { title, author, likes, user } = req.body;
 	const info = await Blog.findOne({ title, author });
 	if (!info) return res.status(403).json('This blog does not exist');
 
@@ -49,7 +49,7 @@ exports.update = async (req, res) => {
 		await Blog.findByIdAndUpdate(req.params.id, { ...req.body, likes: 0 }, { new: true });
 		return res.status(200).json('Updated');
 	}
-	await Blog.findByIdAndUpdate(req.params.id, { ...req.body }, { new: true });
+	await Blog.findByIdAndUpdate(req.params.id, { ...req.body, user: user.id }, { new: true });
 	res.status(200).json('Updated');
 };
 

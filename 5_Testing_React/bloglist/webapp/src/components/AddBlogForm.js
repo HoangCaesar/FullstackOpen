@@ -1,45 +1,21 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import Notification from './Notification';
-import blogApi from '../api/blogApi';
 
-const AddBlog = ({ handleInfoMessage }) => {
-    const [errorMessage, setErrorMessage] = useState(null);
+const AddBlog = ({ errorMessage, onAdd }) => {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [url, setUrl] = useState('');
 
-    const handleAdd = async (event) => {
-        event.preventDefault();
-        if (!(title && author && url)) {
-            setErrorMessage('Please enter both title and author');
-            return setTimeout(() => {
-                setErrorMessage(null);
-            }, 5000);
-        }
-        const blog = {
-            title,
-            author,
-            url,
-        };
-        try {
-            await blogApi.create(blog);
-            setTitle('');
-            setAuthor('');
-            setUrl('');
-            handleInfoMessage(['Create a blog successfully', 'success']);
-        } catch (error) {
-            setErrorMessage(
-                'Invalid information (Note: Maybe your title/author has less than 5 characters)!'
-            );
-            setTimeout(() => {
-                setErrorMessage(null);
-            }, 5000);
-        }
+    const handleAdd = (e) => {
+        e.preventDefault();
+        onAdd({ title, author, url });
+        setTitle('');
+        setAuthor('');
+        setUrl('');
     };
-
     return (
         <div>
-            {errorMessage && <Notification message={errorMessage}/>}
+            {errorMessage && <Notification message={errorMessage} />}
             <form onSubmit={handleAdd}>
                 <div style={{ width: '100%', height: '30px', marginTop: '10px' }}>
                     <span style={{ marginRight: '20px' }}>Title</span>
@@ -70,7 +46,7 @@ const AddBlog = ({ handleInfoMessage }) => {
                 </div>
                 <button
                     type="submit"
-                    style={{ padding: '4px 8px', marginTop: '10px', cursor: 'pointer' }}
+                    style={{ padding: '4px 8px', margin: '10px 0', cursor: 'pointer' }}
                 >
                     Create
                 </button>
@@ -79,4 +55,4 @@ const AddBlog = ({ handleInfoMessage }) => {
     );
 };
 
-export default AddBlog;
+export default memo(AddBlog);
