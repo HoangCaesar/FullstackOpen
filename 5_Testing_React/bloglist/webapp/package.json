@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.1.1",
-    "@testing-library/user-event": "^14.1.1",
     "axios": "^0.27.2",
     "prop-types": "^15.8.1",
     "query-string": "^7.1.1",
@@ -28,7 +25,11 @@
       "react-app/jest"
     ]
   },
-  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
   "browserslist": {
     "production": [
       ">0.2%",
@@ -43,6 +44,9 @@
   },
   "proxy": "http://localhost:3003",
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
     "eslint-plugin-jest": "^27.1.3"
   }
 }

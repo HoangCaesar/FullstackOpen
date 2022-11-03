@@ -15,7 +15,7 @@ const AddBlogForm = ({ errorMessage, onAdd }) => {
         setUrl('');
     };
     return (
-        <div>
+        <div className="formDiv">
             {errorMessage && <Notification message={errorMessage} />}
             <form onSubmit={handleAdd}>
                 <div style={{ width: '100%', height: '30px', marginTop: '10px' }}>
@@ -25,6 +25,8 @@ const AddBlogForm = ({ errorMessage, onAdd }) => {
                         value={title}
                         name="Title"
                         onChange={({ target }) => setTitle(target.value)}
+                        placeholder='write title of blog here'
+                        // className='inputAddForm'
                     />
                 </div>
                 <div style={{ width: '100%', height: '30px', marginTop: '10px' }}>
@@ -34,6 +36,8 @@ const AddBlogForm = ({ errorMessage, onAdd }) => {
                         value={author}
                         name="Author"
                         onChange={({ target }) => setAuthor(target.value)}
+                        placeholder='write author of blog here'
+                        // className='inputAddForm'
                     />
                 </div>
                 <div style={{ width: '100%', height: '30px', marginTop: '10px' }}>
@@ -43,6 +47,8 @@ const AddBlogForm = ({ errorMessage, onAdd }) => {
                         value={url}
                         name="Url"
                         onChange={({ target }) => setUrl(target.value)}
+                        placeholder='write url of blog here'
+                        // className='inputAddForm'
                     />
                 </div>
                 <button

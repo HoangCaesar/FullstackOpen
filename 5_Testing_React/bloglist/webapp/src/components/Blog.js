@@ -13,7 +13,7 @@ const Blog = ({ blog, onLike, onDelete }) => {
     };
 
     return (
-        <div
+        <li
             style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -21,6 +21,7 @@ const Blog = ({ blog, onLike, onDelete }) => {
                 margin: '20px 0',
                 border: '1px solid black',
             }}
+            className='blog'
         >
             <p
                 style={{
@@ -46,14 +47,14 @@ const Blog = ({ blog, onLike, onDelete }) => {
                     Delete
                 </button>
             </Togglable>
-        </div>
+        </li>
     );
 };
 
 Blog.propTypes = {
     blog: PropTypes.object.isRequired,
-    onLike: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
+    // onLike: PropTypes.func.isRequired,
+    // onDelete: PropTypes.func.isRequired,
 };
 
 export default Blog;

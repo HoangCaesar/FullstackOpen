@@ -126,13 +126,20 @@ const Blogs = () => {
             </div>
 
             {infoMessage && <Notification message={infoMessage} type={typeMessage} />}
-            {blogs
-                .sort((a, b) => {
-                    return b.likes - a.likes;
-                })
-                .map((blog) => (
-                    <Blog key={blog.id} blog={blog} onLike={handleLike} onDelete={handleDelete} />
-                ))}
+            <ul style={{ padding: 0 }}>
+                {blogs
+                    .sort((a, b) => {
+                        return b.likes - a.likes;
+                    })
+                    .map((blog) => (
+                        <Blog
+                            key={blog.id}
+                            blog={blog}
+                            onLike={handleLike}
+                            onDelete={handleDelete}
+                        />
+                    ))}
+            </ul>
 
             <Togglable buttonLabel="Create New Blog" ref={addBlogFormRef}>
                 <AddBlogForm errorMessage={errorMessage} onAdd={handleAdd} />
