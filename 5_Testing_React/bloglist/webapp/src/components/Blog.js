@@ -7,9 +7,9 @@ const Blog = ({ blog, onLike, onDelete }) => {
     };
 
     const handleDelete = () => {
-        if (window.confirm(`Do you really want to delete post ${blog.title}?`)) {
-            onDelete(blog);
-        }
+        // if (window.confirm(`Do you really want to delete post ${blog.title}?`)) {
+        onDelete(blog);
+        // }
     };
 
     return (
@@ -21,7 +21,7 @@ const Blog = ({ blog, onLike, onDelete }) => {
                 margin: '20px 0',
                 border: '1px solid black',
             }}
-            className='blog'
+            className="blog"
         >
             <p
                 style={{
@@ -37,13 +37,17 @@ const Blog = ({ blog, onLike, onDelete }) => {
             <Togglable buttonLabel="view">
                 <h4 style={{ marginRight: '10px' }}>Author: {blog.author}</h4>
                 <h4 style={{ marginRight: '10px' }}>URL: {blog.url}</h4>
-                <h4 style={{ marginRight: '10px' }}>
+                <h4 id="like-h4" style={{ marginRight: '10px' }}>
                     Likes: {blog.likes}
                     <button onClick={handleLike} style={{ marginLeft: '10px', cursor: 'pointer' }}>
                         like
                     </button>
                 </h4>
-                <button onClick={handleDelete} style={{ marginRight: '10px', padding: '4px 8px', cursor: 'pointer' }}>
+                <button
+                    id="#delete-button"
+                    onClick={handleDelete}
+                    style={{ marginRight: '10px', padding: '4px 8px', cursor: 'pointer' }}
+                >
                     Delete
                 </button>
             </Togglable>

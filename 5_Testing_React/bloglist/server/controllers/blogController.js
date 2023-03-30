@@ -55,6 +55,7 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
 	const user = req.user;
+	console.log(req.params.id);
 	const blog = await Blog.findById(req.params.id);
 	if ((blog.user.toString() !== user._id.toString()))
 		return res.status(403).json('Not allowed!');

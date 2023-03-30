@@ -19,6 +19,7 @@ const LoginForm = ({ onLogin, onCancel }) => {
             <div style={{ width: '100%', height: '30px', marginTop: '10px' }}>
                 <span style={{ marginRight: '20px' }}>Username</span>
                 <input
+                    id="username"
                     type="text"
                     value={username}
                     name="Username"
@@ -28,6 +29,7 @@ const LoginForm = ({ onLogin, onCancel }) => {
             <div style={{ width: '100%', height: '30px', marginTop: '10px' }}>
                 <span style={{ marginRight: '20px' }}>Password</span>
                 <input
+                    id="password"
                     type="password"
                     value={password}
                     name="Password"
@@ -35,6 +37,7 @@ const LoginForm = ({ onLogin, onCancel }) => {
                 />
             </div>
             <button
+                id="login-button"
                 type="submit"
                 style={{ padding: '4px 8px', marginTop: '10px', cursor: 'pointer' }}
             >

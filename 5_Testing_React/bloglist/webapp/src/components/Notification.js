@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Notification = ({ message, type }) => {
+    console.log(type);
     let style = {
         paddingLeft: '10px',
         height: '40px',
@@ -21,15 +22,15 @@ const Notification = ({ message, type }) => {
     }
 
     return (
-        <>
-            <h3 style={style}>{message}</h3>
-        </>
+        <h3 className={`${type}`} style={style}>
+            {message}
+        </h3>
     );
 };
 
 Notification.propTypes = {
     message: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired
+    type: PropTypes.string.isRequired,
 };
 
 export default Notification;

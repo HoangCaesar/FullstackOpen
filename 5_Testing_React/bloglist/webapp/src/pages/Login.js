@@ -9,7 +9,6 @@ const Login = () => {
 
     const [errorMessage, setErrorMessage] = useState(null);
 
-
     // useEffect(() => {
     //     (async () => {
     //         const res = await isAuthenticate();
@@ -32,7 +31,10 @@ const Login = () => {
             localStorage.setItem('token', res.token);
             navigate('/');
         } catch (error) {
-            setErrorMessage('Wrong credentials');
+            setErrorMessage({
+                message: 'Wrong credentials',
+                type: 'error',
+            });
             setTimeout(() => {
                 setErrorMessage(null);
             }, 5000);
@@ -47,11 +49,10 @@ const Login = () => {
     return (
         <>
             <h1>Login</h1>
-            {errorMessage && <Notification message={errorMessage} />}
-            <LoginForm
-                onLogin={handleLogin}
-                onCancel={handleCancel}
-            />
+            {errorMessage && (
+                <Notification message={errorMessage.message} type={errorMessage.type} />
+            )}
+            <LoginForm onLogin={handleLogin} onCancel={handleCancel} />
         </>
     );
 };

@@ -17,6 +17,7 @@ const decodeToken = req => {
 };
 
 exports.verifyToken = async (req, res, next) => {
+    console.log(req.get('authorization'));
     const tokenDecoded = decodeToken(req);
 
     if (tokenDecoded) {
