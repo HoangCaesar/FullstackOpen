@@ -1,15 +1,18 @@
-// Project Import
-import { FILTER } from './constants';
+import { createSlice } from '@reduxjs/toolkit';
 
-// ==========================================|| FILTER REDUCER ||==========================================
+// ==========================================|| FILTER SLICE ||==========================================
 
-const filterReducer = (state = '', action) => {
-    switch (action.type) {
-        case FILTER:
+const initialState = '';
+
+const filterSlice = createSlice({
+    name: 'filter',
+    initialState,
+    reducers: {
+        filter: (state, action) => {
             return action.payload;
-        default:
-            return state;
-    }
-};
+        },
+    },
+});
 
-export default filterReducer;
+export const filterActions = filterSlice.actions;
+export default filterSlice.reducer;

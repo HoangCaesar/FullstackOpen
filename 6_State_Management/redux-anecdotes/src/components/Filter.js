@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 
 // Project Import
-import { filterActions } from '../store/reducers/actions';
+import { filterActions } from '../store/reducers/filterReducer';
 
 // ==========================================|| ANECDOTE FORM ||==========================================
 

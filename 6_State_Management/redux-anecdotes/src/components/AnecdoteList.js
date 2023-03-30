@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 
 // Project Import
-import { anecdoteActions } from '../store/reducers/actions';
+import { anecdoteActions } from '../store/reducers/anecdoteReducer';
 
 // ==========================================|| ANECDOTE LIST ||==========================================
 

@@ -1,5 +1,4 @@
-// Project Import
-import { NEW_ANECDOTE, INCRE_VOTE } from './constants';
+import { createSlice } from '@reduxjs/toolkit';
 
 // Set up
 const anecdotesAtStart = [
@@ -29,23 +28,25 @@ const compareVotes = (a, b) => {
 
 // ==========================================|| ANECDOTE REDUCER ||==========================================
 
-const anecdoteReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case NEW_ANECDOTE:
-            return [...state, { ...action.payload }];
-        case INCRE_VOTE:
+const anecdoteSlice = createSlice({
+    name: 'anecdotes',
+    initialState,
+    reducers: {
+        increVote: (state, action) => {
             const id = action.payload;
             const anecdoteIndex = state.findIndex((anecdote) => anecdote.id === id);
-            state[anecdoteIndex] = {
-                ...state[anecdoteIndex],
-                votes: state[anecdoteIndex].votes + 1,
-            };
-
+            state[anecdoteIndex].votes += 1;
             state.sort(compareVotes);
-            return [...state];
-        default:
-            return [...state];
-    }
-};
+            return state;
+        },
+        addAnecdote: (state, action) => {
+            state.push(action.payload);
+        },
+        setAnecdotes: (state, action) => {
+            return action.payload;
+        },
+    },
+});
 
-export default anecdoteReducer;
+export const anecdoteActions = anecdoteSlice.actions;
+export default anecdoteSlice.reducer;

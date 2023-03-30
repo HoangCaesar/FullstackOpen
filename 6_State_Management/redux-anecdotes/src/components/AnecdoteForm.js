@@ -1,7 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux';
 
 // Project Import
-import { anecdoteActions } from '../store/reducers/actions';
+import { anecdoteActions } from '../store/reducers/anecdoteReducer';
+import { notificationActions } from '../store/reducers/notificationReducer';
 
 // ==========================================|| ANECDOTE FORM ||==========================================
 
@@ -22,13 +23,17 @@ const AnecdoteForm = () => {
         event.preventDefault();
         const content = event.target.anecdote.value;
         event.target.anecdote.value = '';
+        dispatch(notificationActions.setNotification(`Added a new anecdote: ${content}`));
         dispatch(
-            anecdoteActions.addNewAnecdote({
+            anecdoteActions.addAnecdote({
                 content,
                 votes: 0,
                 id: generateId(),
             })
         );
+        setTimeout(() => {
+            dispatch(notificationActions.removeNotification());
+        }, 5000);
     };
 
     return (
