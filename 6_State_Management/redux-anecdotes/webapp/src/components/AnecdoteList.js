@@ -2,8 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 
 // Project Import
-import { anecdoteActions } from '../store/reducers/anecdoteReducer';
-import anecdoteApi from '../api/anecdote.axios';
+import { initializeAnecdotes, anecdoteActions ,voteAnecdote} from '../store/reducers/anecdoteReducer';
 
 // ==========================================|| ANECDOTE LIST ||==========================================
 
@@ -13,14 +12,11 @@ const AnecdoteList = () => {
     const filter = useSelector((state) => state.filter);
 
     useEffect(() => {
-        (async () => {
-            const list = await anecdoteApi.getAll();
-            dispatch(anecdoteActions.setAnecdotes(list));
-        })();
+        dispatch(initializeAnecdotes());
     }, []);
 
     const vote = (id) => {
-        dispatch(anecdoteActions.increVote(id));
+        dispatch(voteAnecdote(id));
     };
 
     return (

@@ -25,3 +25,16 @@ exports.create = async (req, res) => {
 
     res.status(201).json(savedAnecdote);
 };
+
+exports.getOne = async (req, res) => {
+    const anecdote = await Anecdote.findById(req.params.id);
+    console.log(anecdote[0]);
+    res.status(200).json(anecdote);
+};
+
+exports.updateOne = async (req, res) => {
+    const anecdote = await Anecdote.findByIdAndUpdate(req.params.id, {
+        $set: req.body
+    });
+    res.status(200).json(anecdote);
+};

@@ -12,6 +12,14 @@ const anecdoteApi = {
         const url = `${BASE_URL}/anecdotes`;
         return axiosClient.post(url, data);
     },
+    getOne: (id) => {
+        const url = `${BASE_URL}/anecdotes/${id}`;
+        return axiosClient.get(url);
+    },
+    updateOne: (id, data) => {
+        const url = `${BASE_URL}/anecdotes/${id}`;
+        return axiosClient.patch(url, data);
+    },
 };
 
 export default anecdoteApi;
