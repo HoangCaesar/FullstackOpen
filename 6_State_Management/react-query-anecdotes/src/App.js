@@ -5,7 +5,7 @@ import anecdoteApi from './api/anecdote.axios';
 
 const App = () => {
     const queryClient = useQueryClient();
-    const anecdoteVoteMutation = useMutation(anecdoteApi.updateOne, {
+    const voteAnecdoteMutation = useMutation(anecdoteApi.updateOne, {
         onSuccess: () => {
             queryClient.invalidateQueries('anecdotes');
         },
@@ -13,15 +13,15 @@ const App = () => {
 
     const handleVote = (anecdote) => {
         console.log('vote');
-        anecdoteVoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 });
+        voteAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 });
     };
 
     const { isLoading, isError, data } = useQuery('anecdotes', anecdoteApi.getAll, {
         retry: 1,
     });
-    if (isLoading) return <div>loading data...</div>;
+    if (isLoading) return <div>Loading data...</div>;
 
-    if (isError) return <div>anecote service not available due to problems in server</div>;
+    if (isError) return <div>Anecote service not available due to problems in server</div>;
 
     const anecdotes = data;
 
