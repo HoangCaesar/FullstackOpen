@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 // Project Import
 import { anecdoteActions } from '../store/reducers/anecdoteReducer';
 import { notificationActions } from '../store/reducers/notificationReducer';
+import anecdoteApi from '../api/anecdote.axios';
 
 // ==========================================|| ANECDOTE FORM ||==========================================
 
@@ -19,21 +20,21 @@ const AnecdoteForm = () => {
         return id;
     };
 
-    const addNote = (event) => {
+    const addNote = async (event) => {
         event.preventDefault();
         const content = event.target.anecdote.value;
         event.target.anecdote.value = '';
+        const data = {
+            content,
+            votes: 0,
+            id: generateId(),
+        };
         dispatch(notificationActions.setNotification(`Added a new anecdote: ${content}`));
-        dispatch(
-            anecdoteActions.addAnecdote({
-                content,
-                votes: 0,
-                id: generateId(),
-            })
-        );
+        dispatch(anecdoteActions.addAnecdote(data));
         setTimeout(() => {
             dispatch(notificationActions.removeNotification());
         }, 5000);
+        await anecdoteApi.create(data);
     };
 
     return (
