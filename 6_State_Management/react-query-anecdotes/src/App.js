@@ -32,15 +32,17 @@ const App = () => {
             <Notification />
             <AnecdoteForm />
 
-            {anecdotes.map((anecdote) => (
-                <div key={anecdote.id}>
-                    <div>{anecdote.content}</div>
-                    <div>
-                        has {anecdote.votes}
-                        <button onClick={() => handleVote(anecdote)}>vote</button>
+            <div style={{ marginTop: '30px' }}>
+                {anecdotes.map((anecdote) => (
+                    <div key={anecdote.id} style={{ marginTop: '15px' }}>
+                        <div>{anecdote.content}</div>
+                        <div>
+                            has {anecdote.votes}
+                            <button onClick={() => handleVote(anecdote)}>vote</button>
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     );
 };
