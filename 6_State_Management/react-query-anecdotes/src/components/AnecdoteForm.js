@@ -1,12 +1,24 @@
 import { useMutation, useQueryClient } from 'react-query';
 import anecdoteApi from '../api/anecdote.axios';
+import { NotificationContext } from '../providers/NotiProvider';
+import { useContext } from 'react';
 
 const AnecdoteForm = () => {
+    const context = useContext(NotificationContext);
+
     const queryClient = useQueryClient();
 
     const newAnecdoteMutation = useMutation(anecdoteApi.create, {
         onSuccess: () => {
             queryClient.invalidateQueries('anecdotes');
+        },
+        onError: () => {
+            context.dispatch({
+                type: 'ERROR',
+            });
+            setTimeout(() => {
+                context.dispatch({ type: 'HIDE' });
+            }, 5000);
         },
     });
 
@@ -14,7 +26,28 @@ const AnecdoteForm = () => {
         event.preventDefault();
         const content = event.target.anecdote.value;
         event.target.anecdote.value = '';
-        newAnecdoteMutation.mutate({ content, votes: 0 })
+        newAnecdoteMutation.mutate(
+            { content, votes: 0 },
+            {
+                onError: () => {
+                    context.dispatch({
+                        type: 'ERROR',
+                    });
+                    setTimeout(() => {
+                        context.dispatch({ type: 'HIDE' });
+                    }, 5000);
+                },
+                onSuccess: () => {
+                    context.dispatch({
+                        type: 'SHOW',
+                        data: `you created: '${content}'`,
+                    });
+                    setTimeout(() => {
+                        context.dispatch({ type: 'HIDE' });
+                    }, 5000);
+                },
+            }
+        );
     };
 
     return (
