@@ -8,6 +8,7 @@ import { anecdoteActions } from '../store/reducers/actions';
 const AnecdoteList = () => {
     const dispatch = useDispatch();
     const anecdotes = useSelector((state) => state.anecdote);
+    const filter = useSelector((state) => state.filter);
 
     const vote = (id) => {
         dispatch(anecdoteActions.increVote(id));
@@ -15,15 +16,17 @@ const AnecdoteList = () => {
 
     return (
         <>
-            {anecdotes?.map((anecdote) => (
-                <div key={anecdote.id}>
-                    <div>{anecdote.content}</div>
-                    <div>
-                        has {anecdote.votes}
-                        <button onClick={() => vote(anecdote.id)}>vote</button>
+            {anecdotes
+                ?.filter((anecdote) => anecdote.content.includes(filter))
+                ?.map((anecdote) => (
+                    <div key={anecdote.id}>
+                        <div>{anecdote.content}</div>
+                        <div>
+                            has {anecdote.votes}
+                            <button onClick={() => vote(anecdote.id)}>vote</button>
+                        </div>
                     </div>
-                </div>
-            ))}
+                ))}
         </>
     );
 };

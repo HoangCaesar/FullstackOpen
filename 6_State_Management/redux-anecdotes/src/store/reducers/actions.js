@@ -1,4 +1,4 @@
-import { NEW_ANECDOTE, INCRE_VOTE } from './constants';
+import { NEW_ANECDOTE, INCRE_VOTE, FILTER } from './constants';
 
 // ==========================================|| ANECDOTE ACTION ||==========================================
 const anecdoteActions = {
@@ -10,4 +10,12 @@ const anecdoteActions = {
     },
 };
 
-export { anecdoteActions };
+// ==========================================|| FILTER ACTION ||==========================================
+
+const filterActions = {
+    filter: (payload) => {
+        return { type: FILTER, payload };
+    },
+};
+
+export { anecdoteActions, filterActions };
