@@ -15,7 +15,7 @@ const style = {
 const AnecdoteList = () => {
     const [anecdotes, setAnecdotes] = useState(demo_data);
     const [notification, setNotification] = useState(localStorage.getItem('noti'));
-    console.log(notification);
+    
     useEffect(() => {
         setTimeout(() => {
             localStorage.removeItem('noti');
