@@ -28,7 +28,7 @@ const Login = () => {
             dispatch(userActions.setUser(user));
             const res = await authApi.login(user);
             localStorage.setItem('token', res.token);
-            navigate('/');
+            navigate('/blogs');
         } catch (error) {
             dispatch(setNotificationTimeout('Wrong credentials', 'error', 5000));
             return;

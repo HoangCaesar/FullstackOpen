@@ -16,7 +16,8 @@ import { blogsActions } from '../store/reducers/blogs.reducer';
 const Blogs = () => {
     const dispatch = useDispatch();
     const blogs = useSelector((state) => state.blogs);
-    console.log(blogs);
+    const user = useSelector((state) => state.user);
+
     const navigate = useNavigate();
     const [logout, setLogout] = useState(false);
 
@@ -96,8 +97,29 @@ const Blogs = () => {
 
     return (
         <>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <h2 style={{ marginRight: '10px' }}>Blogs</h2>
+                <span style={{ marginRight: '10px' }}>{user?.username} has logged in</span>
+                <Link
+                    style={{
+                        padding: '8px 16px',
+                        color: 'black',
+                        cursor: 'pointer',
+                    }}
+                    to="/users"
+                >
+                    Users Dashboard
+                </Link>
+                <Link
+                    style={{
+                        padding: '8px 16px',
+                        color: 'black',
+                        cursor: 'pointer',
+                    }}
+                    to="/blogs"
+                >
+                    Blogs List
+                </Link>
                 {logout ? (
                     <button onClick={handleLogout} style={{ height: '30px', cursor: 'pointer' }}>
                         Logout

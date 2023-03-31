@@ -1,4 +1,4 @@
-const { Blog } = require('../models');
+const { Blog, User } = require('../models');
 
 exports.getAll = async (req, res) => {
 	const list = await Blog.find({}).sort({ createdAt: -1 }).populate('user', { username: 1, name: 1 });
@@ -24,18 +24,16 @@ exports.create = async (req, res) => {
 	if (!likes) {
 		const newBlog = new Blog({ ...req.body, likes: 0, user: user._id, date: new Date() });
 		const savedBlog = await newBlog.save();
-		user.blogs = user.blogs.concat(savedBlog._id);
+		await User.findByIdAndUpdate(user._id, {$push: {blogs: savedBlog}});
 		return res.status(201).json('Create a new blog successfully!');
 	} else if (!title || !url) {
 		return res.status(400).end();
 	}
-	console.log(user);
 	const newBlog = new Blog({ ...req.body, user: user._id, date: new Date() });
 
 	await newBlog.save();
 	const savedBlog = await newBlog.save();
-
-	user.blogs = user.blogs.concat(savedBlog._id);
+	await User.findByIdAndUpdate(user._id, {$push: {blogs: savedBlog}});
 	await user.save();
 	res.status(201).json('Create a new blog successfully!');
 };

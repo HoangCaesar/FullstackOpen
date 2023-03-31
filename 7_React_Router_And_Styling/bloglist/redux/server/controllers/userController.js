@@ -6,6 +6,11 @@ exports.getAll = async (req, res) => {
     res.status(200).json(list);
 };
 
+exports.getOne = async (req, res) => {
+    const user = await User.findById(req.params.id).populate('blogs', { title: 1, date: 1 });
+    res.status(200).json(user);
+};
+
 exports.create = async (req, res) => {
     const { username, name, password } = req.body;
 

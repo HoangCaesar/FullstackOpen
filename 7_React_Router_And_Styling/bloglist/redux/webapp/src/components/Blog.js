@@ -1,7 +1,9 @@
 import Togglable from './Togglable';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 const Blog = ({ blog, onLike, onDelete }) => {
+    const navigate = useNavigate();
 
     const handleLike = () => {
         onLike(blog);
@@ -9,6 +11,10 @@ const Blog = ({ blog, onLike, onDelete }) => {
 
     const handleDelete = () => {
         onDelete(blog);
+    };
+
+    const handleBlogDetails = () => {
+        navigate(`/blogs/${blog.id}`);
     };
 
     return (
@@ -48,6 +54,12 @@ const Blog = ({ blog, onLike, onDelete }) => {
                     style={{ marginRight: '10px', padding: '4px 8px', cursor: 'pointer' }}
                 >
                     Delete
+                </button>
+                <button
+                    onClick={handleBlogDetails}
+                    style={{ marginRight: '10px', padding: '4px 8px', cursor: 'pointer' }}
+                >
+                    View Details
                 </button>
             </Togglable>
         </li>
