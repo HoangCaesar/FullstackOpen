@@ -180,7 +180,14 @@ const resolvers = {
             }
 
             const newAuthor = { ...author, born: args.setBornTo };
-            authors = authors.concat(newAuthor);
+            authors = [
+                ...authors.map((author) => {
+                    if (author.name === args.name) {
+                        return newAuthor;
+                    }
+                    return author;
+                }),
+            ];
             return newAuthor;
         },
     },
