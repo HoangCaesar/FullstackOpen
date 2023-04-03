@@ -167,11 +167,11 @@ const resolvers = {
                 author.save();
                 const book = { ...args, author, id: uuidv4() };
                 const newBook = new Book(book);
-                await newBook.save();
+                await newBook.save()
 
                 return book;
             } catch (error) {
-                throw new GraphQLError('Add book failed', {
+                throw new GraphQLError(error.message, {
                     extensions: {
                         code: 'BAD_USER_INPUT',
                         invalidArgs: args,
@@ -230,20 +230,26 @@ const resolvers = {
             }
         },
         login: async (root, args) => {
-            const user = await User.findOne({ username: args.username });
+            try {
+                const user = await User.findOne({ username: args.username });
 
-            if (!user || args.password !== user.password) {
-                throw new GraphQLError('Wrong credentials', {
-                    code: 'BAD_USER_INPUT',
+                if (!user || args.password !== user.password) {
+                    throw new GraphQLError('Wrong credentials', {
+                        code: 'BAD_USER_INPUT',
+                    });
+                }
+
+                const userForToken = {
+                    username: user.username,
+                    id: user._id,
+                };
+
+                return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
+            } catch (error) {
+                throw new GraphQLError(error, {
+                    code: 'GRAPHQL_VALIDATION_FAILED',
                 });
             }
-
-            const userForToken = {
-                username: user.username,
-                id: user._id,
-            };
-
-            return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
         },
     },
 };
@@ -256,12 +262,17 @@ const server = new ApolloServer({
 startStandaloneServer(server, {
     listen: { port: 4000 },
     context: async ({ req }) => {
-        const auth = req ? req.headers.authorization : null;
-
-        if (auth) {
-            const decodedToken = jwt.verify(auth, process.env.JWT_SECRET);
-            const currentUser = await User.findById(decodedToken.id);
-            return { currentUser };
+        try {
+            const auth = req ? req.headers.authorization : null;
+            if (!!auth) {
+                const decodedToken = jwt.verify(auth.substring(7), process.env.JWT_SECRET);
+                const currentUser = await User.findById(decodedToken.id);
+                return { currentUser };
+            }
+        } catch (error) {
+            throw new GraphQLError(error.message, {
+                code: 'BAD_USER_INPUT',
+            });
         }
     },
 }).then(({ url }) => {
